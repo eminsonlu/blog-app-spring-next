@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  db:
+    platform: linux/x86_64
+    image: "mysql:latest"
+    restart: always
+    ports:
+      - 3307:3306
+    environment:
+      MYSQL_DATABASE: blog-app
+      MYSQL_USER: blog-app
+      MYSQL_PASSWORD: 123456789
+      MYSQL_ROOT_PASSWORD: 123456789
