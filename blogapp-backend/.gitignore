@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### remove /blogapp-backend/src/main/resources ###
+!/blogapp-backend/src/main/resources
+!/blogapp-backend/src/main/resources/application.properties
