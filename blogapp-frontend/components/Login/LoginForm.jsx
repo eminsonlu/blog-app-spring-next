@@ -46,8 +46,12 @@ export default function LoginForm(props) {
       },
     })
       .then((res) => res.json())
-      .then(() => {
-        router.push("/posts");
+      .then((res) => {
+        if(res.isLoggedIn){
+          router.push("/posts");
+        }else {
+          alert(res.message)
+        }
       });
   }
 

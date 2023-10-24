@@ -18,9 +18,14 @@ export default withIronSessionApiRoute(async (req, res) => {
 
     const data = await response.json();
 
+    if (!response.ok) {
+      res.status(401).json({ message: data.message });
+      return;
+    }
+
     const now = new Date();
     const oneWeekLater = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-
+    console.log(data);
     const user = {
       isLoggedIn: true,
       accessToken: data.accessToken,
@@ -30,10 +35,12 @@ export default withIronSessionApiRoute(async (req, res) => {
       id: data.id,
       roles: data.roles,
     };
+
     req.session.user = user;
     await req.session.save();
     res.status(200).json(user);
   } catch (error) {
+    console.log(error)
     res.status(500).json({ message: error.message });
   }
 }, sessionOptions);

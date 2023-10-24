@@ -30,9 +30,11 @@ const Navbar = ({ children }) => {
     <div className="flex flex-col gap-4">
       <div className="flex justify-between items-center">
         <div className="flex gap-4">
-          <Link href="/profile" className="text-xl font-bold cursor-pointer">
-            Profile
-          </Link>
+          {user?.isLoggedIn && (
+            <Link href="/profile" className="text-xl font-bold cursor-pointer">
+              Profile
+            </Link>
+          )}
           <Link href="/posts" className="text-xl font-semibold cursor-pointer">
             Posts
           </Link>
@@ -44,9 +46,14 @@ const Navbar = ({ children }) => {
               <button onClick={() => signOut()}>Sign Out</button>
             </div>
           ) : (
-            <Link href="/login" className="text-xl font-semibold">
-              Login
-            </Link>
+            <>
+              <Link href="/login" className="text-xl font-semibold">
+                Login
+              </Link>
+              <Link href="/register" className="text-xl font-semibold">
+                Register
+              </Link>
+            </>
           )}
         </div>
       </div>
