@@ -25,6 +25,7 @@ public class PostController {
         return postService.getAllPosts(userId);
     }
 
+
     @PostMapping
     @PreAuthorize("hasRole('USER')")
     public Post createOnePost(@RequestBody PostCreateRequest post) {

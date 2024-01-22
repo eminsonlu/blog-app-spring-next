@@ -5,11 +5,13 @@ import com.eiben.Blog.App.repository.CommentRepository;
 import com.eiben.Blog.App.requests.CommentCreateRequest;
 import com.eiben.Blog.App.requests.CommentUpdateRequest;
 import com.eiben.Blog.App.responses.CommentResponse;
+import javax.swing.text.html.Option;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CommentService {
@@ -23,19 +25,9 @@ public class CommentService {
         this.postService = postService;
     }
 
-    public List<CommentResponse> getAllComments(Optional<Long> postId, Optional<Long> userId) {
-        List<Comment> list;
-        if(postId.isPresent() && userId.isPresent()) {
-            list = commentRepository.findByPostIdAndUserId(postId.get(), userId.get());
-        }else if (postId.isPresent()){
-            list = commentRepository.findByPostId(postId.get());
-        }else if (userId.isPresent()) {
-            list = commentRepository.findByUserId(userId.get());
-        }else {
-            list = commentRepository.findAll();
-        }
-        List<CommentResponse> forReturn = list.stream().map(c -> new CommentResponse(c)).collect(Collectors.toList());
-        return forReturn;
+    public List<CommentResponse> getAllComments() {
+        List<Comment> list = commentRepository.findAll();
+        return list.stream().map(c -> new CommentResponse(c)).collect(Collectors.toList());
     }
 
     public CommentResponse getOneComment(Long commentId) {
@@ -57,18 +49,32 @@ public class CommentService {
         return new CommentResponse(toSave);
     }
 
-    public CommentResponse updateOneComment(Long commentId, CommentUpdateRequest comment) {
+    public void updateOneComment(Long commentId, CommentUpdateRequest comment) {
         Optional<Comment> foundedComment = commentRepository.findById(commentId);
-        if(foundedComment.isPresent()) {
-            Comment toUpdate = foundedComment.get();
-            toUpdate.setText(comment.getText());
-            toUpdate = commentRepository.save(toUpdate);
-            return new CommentResponse(toUpdate);
+        if (foundedComment.isEmpty()) {
+            return;
         }
-        return null;
+        Comment toUpdate = foundedComment.get();
+        toUpdate.setText(comment.getText());
+        commentRepository.save(toUpdate);
     }
 
     public void deleteOneComment(Long commentId) {
         commentRepository.deleteById(commentId);
+    }
+
+    public List<CommentResponse> getAllCommntsBasedOnPostAndUser(Long postId, Long userId) {
+        List<Comment> list = commentRepository.findByPostIdAndUserId(postId, userId);
+        return list.stream().map(c -> new CommentResponse(c)).collect(Collectors.toList());
+    }
+
+    public List<CommentResponse> getAllCommentsByPostId(Long postId) {
+        List<Comment> list = commentRepository.findByPostId(postId);
+        return list.stream().map(c -> new CommentResponse(c)).collect(Collectors.toList());
+    }
+
+    public List<CommentResponse> getAllCommentsByUserId(Long userId) {
+        List<Comment> list = commentRepository.findByUserId(userId);
+        return list.stream().map(c -> new CommentResponse(c)).collect(Collectors.toList());
     }
 }

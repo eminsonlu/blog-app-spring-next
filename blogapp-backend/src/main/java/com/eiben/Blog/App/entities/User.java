@@ -2,6 +2,7 @@ package com.eiben.Blog.App.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -22,7 +23,7 @@ public class User {
     String password;
 
     @Column(name = "is_verified", nullable = false)
-    Boolean is_verified = false;
+    Boolean verified = false;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_to_roles",

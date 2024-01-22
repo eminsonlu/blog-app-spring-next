@@ -5,6 +5,7 @@ import com.eiben.Blog.App.requests.CommentCreateRequest;
 import com.eiben.Blog.App.requests.CommentUpdateRequest;
 import com.eiben.Blog.App.responses.CommentResponse;
 import com.eiben.Blog.App.services.CommentService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,8 +22,22 @@ public class CommentController {
     }
 
     @GetMapping
-    public List<CommentResponse> getAllComments(@RequestParam Optional<Long> postId, @RequestParam Optional<Long> userId){
-        return commentService.getAllComments(postId, userId);
+    public List<CommentResponse> getAllComments(){
+        return commentService.getAllComments();
+    }
+    @GetMapping("/{postId}/{userId}")
+    public List<CommentResponse> getAllCommentsByPostIdAndUserId(@PathVariable Long postId, @PathVariable Long userId){
+        return commentService.getAllCommntsBasedOnPostAndUser(postId, userId);
+    }
+
+    @GetMapping("/by-post/{postId}")
+    public List<CommentResponse> getAllCommentsByPostId(@PathVariable Long postId){
+        return commentService.getAllCommentsByPostId(postId);
+    }
+
+    @GetMapping("/by-user/{userId}")
+    public List<CommentResponse> getAllCommentsByUserId(@PathVariable Long userId){
+        return commentService.getAllCommentsByUserId(userId);
     }
 
     @GetMapping("/{commentId}")
@@ -39,8 +54,9 @@ public class CommentController {
 
     @PutMapping("/{commentId}")
     @PreAuthorize("hasRole('USER')")
-    public CommentResponse updateOneComment(@PathVariable Long commentId, @RequestBody CommentUpdateRequest comment) {
-        return commentService.updateOneComment(commentId, comment);
+    public ResponseEntity<Void> updateOneComment(@PathVariable Long commentId, @RequestBody CommentUpdateRequest comment) {
+         commentService.updateOneComment(commentId, comment);
+         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{commentId}")

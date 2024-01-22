@@ -91,7 +91,7 @@ public class AuthenticationController {
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setRoles(roles);
-        user.setIs_verified(false);
+        user.setVerified(false);
         userService.saveOneUser(user);
         registerResponse.setMessage("User registered successfully");
         return ResponseEntity.ok(registerResponse);
@@ -128,10 +128,10 @@ public class AuthenticationController {
         }
 
         User user = userVerification.getUser();
-        if(!user.getIs_verified()){
+        if(!user.getVerified()){
             Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
             if(userVerification.getExpires_at().after(currentTimestamp)) {
-                user.setIs_verified(true);
+                user.setVerified(true);
                 userService.saveOneUser(user);
                 return ResponseEntity.ok("User verified successfully");
             }else {
